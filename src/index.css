@@ -74,4 +74,10 @@
   .agreement a {
     @apply no-underline text-[#0099ff] text-[9px];
   }
+  .navItems {
+    @apply mt-8 flex flex-col gap-4 text-xl text-primary font-semibold font-primary;
+  }
+  .title {
+    @apply font-primary text-2xl font-bold text-primary;
+  }
 }
