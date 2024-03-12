@@ -1,6 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 const Registration = () => {
+  let [name, setName] = useState("User Name");
+  let [email, setEmail] = useState("user@gmail.com");
+  let [password, setPassword] = useState("12345");
+  const auth = getAuth();
+
+  const handelSubmit = () => {
+    createUserWithEmailAndPassword(auth)
+      .then((userCredential) => {
+        name, email, password;
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+      });
+  };
+
   return (
     <section className="pt-10">
       <div className="container">
@@ -20,7 +40,9 @@ const Registration = () => {
               <span className="forgot-password">
                 <a href="#">Forgot Password ?</a>
               </span>
-              <button className="login-button">Registration</button>
+              <button onClick={handelSubmit} className="login-button">
+                Registration
+              </button>
               <p>
                 Already have an account ?{" "}
                 <Link className="text-[#0099ff]" to="/login">

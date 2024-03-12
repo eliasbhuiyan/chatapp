@@ -22,11 +22,20 @@ const Navbar = () => {
           </li>
           <li>
             <Link
-              to="/"
+              to="/chat"
               className="flex items-center gap-3 py-3 px-3 rounded-lg  w-fit"
             >
               <IoChatbox />
               <span>Chat</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/chat"
+              className="flex items-center gap-3 py-3 px-3 rounded-lg  w-fit"
+            >
+              <IoChatbox />
+              <span>Group</span>
             </Link>
           </li>
           <li>

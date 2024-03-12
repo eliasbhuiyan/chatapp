@@ -9,6 +9,7 @@ import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
 import Registration from "./components/pages/Registration";
 import User from "./components/pages/User";
+import Chat from "./components/pages/Chat";
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />}></Route>
           <Route path="/user" element={<User />}></Route>
+          <Route path="/chat" element={<Chat />}></Route>
         </Route>
       </Route>
     )
