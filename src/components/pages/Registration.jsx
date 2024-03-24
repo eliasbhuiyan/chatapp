@@ -39,6 +39,7 @@ const Registration = () => {
           setName("");
           setEmail("");
           setPassword("");
+          setUserError("");
           setTimeout(() => {
             navigate("/login");
           }, 3000);
@@ -91,7 +92,7 @@ const Registration = () => {
               <input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input"
+                className="input my-5"
                 type="email"
                 placeholder="E-mail"
               />
@@ -112,9 +113,6 @@ const Registration = () => {
                   {userError.passwordError}
                 </p>
               )}
-              <span className="forgot-password">
-                <a href="#">Forgot Password ?</a>
-              </span>
               <button onClick={handelSubmit} className="login-button">
                 Registration
               </button>

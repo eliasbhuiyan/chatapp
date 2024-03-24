@@ -12,7 +12,7 @@
   }
 
   .form .input {
-    @apply w-full shadow-[#cff0ff_0px_10px_10px_-5px] mt-[15px] px-5 py-[15px] rounded-[20px] border-[none];
+    @apply w-full shadow-[#cff0ff_0px_10px_10px_-5px] px-5 py-[15px] rounded-[20px] border-[none];
     background: white;
     border-inline: 2px solid transparent;
   }
