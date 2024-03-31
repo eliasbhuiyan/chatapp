@@ -4,9 +4,12 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaEye } from "react-icons/fa";
+import { RiEyeCloseFill } from "react-icons/ri";
 
 const Registration = () => {
   const auth = getAuth();
@@ -14,6 +17,7 @@ const Registration = () => {
   let [name, setName] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [userError, setUserError] = useState({
     nameError: "",
     emailError: "",
@@ -30,19 +34,27 @@ const Registration = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           sendEmailVerification(auth.currentUser);
-          toast.success("Registration Successful!. Please verify your email", {
-            position: "top-center",
-            autoClose: 5000,
-            closeOnClick: true,
-            theme: "light",
+          updateProfile(auth.currentUser, {
+            displayName: name,
+            photoURL: "/profile.png",
+          }).then((res) => {
+            toast.success(
+              "Registration Successful!. Please verify your email",
+              {
+                position: "top-center",
+                autoClose: 5000,
+                closeOnClick: true,
+                theme: "light",
+              }
+            );
+            setName("");
+            setEmail("");
+            setPassword("");
+            setUserError("");
+            setTimeout(() => {
+              navigate("/login");
+            }, 3000);
           });
-          setName("");
-          setEmail("");
-          setPassword("");
-          setUserError("");
-          setTimeout(() => {
-            navigate("/login");
-          }, 3000);
         })
         .catch((error) => {
           console.log(error.code);
@@ -101,13 +113,21 @@ const Registration = () => {
                   {userError.emailError}
                 </p>
               )}
-              <input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input"
-                type="password"
-                placeholder="Password"
-              />
+              <div className="flex items-center my-5 relative">
+                <input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input"
+                  type={showPass ? "text" : "password"}
+                  placeholder="Password"
+                />
+                <div
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute top-1/2 right-5 -translate-y-1/2 cursor-pointer text-xl"
+                >
+                  {showPass ? <FaEye /> : <RiEyeCloseFill />}
+                </div>
+              </div>
               {userError.passwordError && (
                 <p className="w-fit text-white text-start py-1 px-2 bg-red-500 mt-2 rounded-lg">
                   {userError.passwordError}

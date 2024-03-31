@@ -3,9 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { RiEyeCloseFill } from "react-icons/ri";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { loggeduser } from "../../slice/userSlice";
 const Login = () => {
+  const disptch = useDispatch();
   const auth = getAuth();
+  const db = getDatabase();
   let navigate = useNavigate();
   const [emailError, setEmailError] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -23,7 +28,11 @@ const Login = () => {
     } else {
       signInWithEmailAndPassword(auth, loginData.email, loginData.password)
         .then((res) => {
-          console.log(res);
+          set(ref(db, "user/" + res.user.uid), {
+            username: res.user.displayName,
+            email: res.user.email,
+            profile_picture: res.user?.photoURL,
+          });
           if (res.user.emailVerified == false) {
             toast.error("Email is not verified!", {
               position: "top-center",
@@ -32,12 +41,15 @@ const Login = () => {
               theme: "light",
             });
           } else {
+            console.log(res.user.uid);
             toast.success("Login Successful!", {
               position: "top-center",
               autoClose: 5000,
               closeOnClick: true,
               theme: "light",
             });
+            // disptch(loggeduser({ user: res.user }));
+            console.log(res);
             // setTimeout(() => {
             //   navigate("/");
             // }, 1500);
