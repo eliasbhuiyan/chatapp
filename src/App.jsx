@@ -5,11 +5,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Layout from "./components/Layout";
-import Home from "./components/pages/Home";
-import Login from "./components/pages/Login";
-import Registration from "./components/pages/Registration";
-import User from "./components/pages/User";
-import Chat from "./components/pages/Chat";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
+import User from "./pages/User";
+import Chat from "./pages/Chat";
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(

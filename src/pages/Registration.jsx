@@ -17,6 +17,7 @@ const Registration = () => {
   let [name, setName] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
+  let re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   const [showPass, setShowPass] = useState(false);
   const [userError, setUserError] = useState({
     nameError: "",
@@ -30,7 +31,11 @@ const Registration = () => {
       setUserError({ emailError: "Email is Required !" });
     } else if (!password) {
       setUserError({ passwordError: "Password is Required !" });
-    } else {
+    }
+    //  else if (!re.test(password)) {
+    //   setUserError({ passwordError: "Inter a strong password !" });
+    // }
+    else {
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           sendEmailVerification(auth.currentUser);

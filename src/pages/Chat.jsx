@@ -1,6 +1,6 @@
 import React from "react";
-import ChatList from "../ChatList";
-import ChatBox from "../ChatBox";
+import ChatBox from "../components/ChatBox";
+import ChatList from "../components/ChatList";
 
 const Chat = () => {
   return (

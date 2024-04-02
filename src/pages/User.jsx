@@ -4,7 +4,9 @@ import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoMdMore } from "react-icons/io";
+import { useSelector } from "react-redux";
 const User = () => {
+  const user = useSelector((state) => state.userSlice.user);
   return (
     <div className="w-96 bg-white shadow-lg rounded-lg overflow-hidden my-4 m-auto h-fit">
       <img
@@ -13,7 +15,9 @@ const User = () => {
         alt="avatar"
       />
       <div className="flex items-center justify-between px-6 py-3 bg-gray-900">
-        <h1 className="mx-3 text-white font-semibold text-lg">User Name</h1>
+        <h1 className="mx-3 text-white font-semibold text-lg">
+          {user.displayName}
+        </h1>
         <div className="group relative w-fit">
           <IoMdMore className="text-white text-2xl cursor-pointer" />
           <p className="text-white hidden absolute bottom-full right-0 group-hover:block whitespace-nowrap">
