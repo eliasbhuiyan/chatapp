@@ -1,9 +1,28 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import UserItems from "./UserItems";
 import Title from "./Title";
-
+import { getDatabase, ref, onValue } from "firebase/database";
+import { useSelector } from "react-redux";
 const Users = () => {
+  const db = getDatabase();
+  const user = useSelector((state) => state.userSlice.user);
+  const [userList, setUserList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const starCountRef = ref(db, "user/");
+    let arr = [];
+    onValue(starCountRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        if (item.key !== user.uid) {
+          arr.push({ ...item.val(), key: item.key });
+        }
+        setUserList(arr);
+        setLoading(false);
+      });
+    });
+  }, []);
+  console.log("user list", userList);
   return (
     <div className="w-1/3 p-4 rounded-2xl bg-white shadow-lg">
       <Title title="Users" />
@@ -16,10 +35,11 @@ const Users = () => {
         />
       </div>
       <div className="flex flex-col gap-4 mt-5">
-        <UserItems />
-        <UserItems />
-        <UserItems />
-        <UserItems />
+        {loading ? (
+          <p>Loading Data...</p>
+        ) : (
+          userList.map((item) => <UserItems userData={item} key={item.key} />)
+        )}
       </div>
     </div>
   );

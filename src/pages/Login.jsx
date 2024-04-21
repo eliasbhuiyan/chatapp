@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { RiEyeCloseFill } from "react-icons/ri";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -42,7 +47,6 @@ const Login = () => {
               profile_picture: res.user?.photoURL,
             })
               .then(() => {
-                console.log(res);
                 toast.success("Login Successful!", {
                   position: "top-center",
                   autoClose: 5000,
@@ -85,6 +89,40 @@ const Login = () => {
           }
         });
     }
+  };
+  const provider = new GoogleAuthProvider();
+  const handelGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((res) => {
+        GoogleAuthProvider.credentialFromResult(res);
+
+        set(ref(db, "user/" + res.user.uid), {
+          username: res.user.displayName,
+          email: res.user.email,
+          profile_picture: res.user.photoURL,
+        })
+          .then(() => {
+            toast.success("Login Successful!", {
+              position: "top-center",
+              autoClose: 5000,
+              closeOnClick: true,
+              theme: "light",
+            });
+            localStorage.setItem("user", JSON.stringify(res.user));
+            disptch(loggeduser(res.user));
+            setTimeout(() => {
+              navigate("/");
+            }, 1500);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        // ...
+      });
   };
   return (
     <section className="pt-10">
@@ -152,6 +190,9 @@ const Login = () => {
                   Registration
                 </Link>
               </p>
+              <button onClick={handelGoogle} className="w-60 m-auto">
+                <img src="/google.png" alt="google" className="w-full" />
+              </button>
             </div>
           </div>
         </div>
