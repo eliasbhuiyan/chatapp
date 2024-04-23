@@ -47,7 +47,7 @@ const Navbar = () => {
               className="flex items-center gap-3 py-3 px-3 rounded-lg  w-fit"
             >
               <img
-                src={user.photoURL}
+                src={user?.photoURL}
                 alt="user"
                 className="w-12 h-12 rounded-full"
               />

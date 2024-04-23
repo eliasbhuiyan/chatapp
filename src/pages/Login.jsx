@@ -99,7 +99,7 @@ const Login = () => {
         set(ref(db, "user/" + res.user.uid), {
           username: res.user.displayName,
           email: res.user.email,
-          profile_picture: res.user.photoURL,
+          profile_picture: "/profile.png",
         })
           .then(() => {
             toast.success("Login Successful!", {
