@@ -22,7 +22,6 @@ const Users = () => {
       });
     });
   }, []);
-  console.log("user list", userList);
   return (
     <div className="w-1/3 p-4 rounded-2xl bg-white shadow-lg">
       <Title title="Users" />

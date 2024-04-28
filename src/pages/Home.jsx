@@ -6,8 +6,6 @@ import MyGroup from "../components/MyGroup";
 import Users from "../components/Users";
 
 const Home = () => {
-  const userFromLocal = JSON.parse(localStorage.getItem("user"));
-  console.log("userFromLocal =======> ", userFromLocal);
   return (
     <div className="bg-slate-100 w-full py-12 px-6">
       <div className="flex gap-6 ">

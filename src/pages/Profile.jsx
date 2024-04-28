@@ -6,9 +6,16 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { GiCrossMark } from "react-icons/gi";
 import { createRef, useState } from "react";
-import { getDatabase, ref, set } from "firebase/database";
-const User = () => {
-  const db = getDatabase();
+import {
+  getStorage,
+  ref,
+  uploadString,
+  getDownloadURL,
+} from "firebase/storage";
+import { updateProfile, onAuthStateChanged, getAuth } from "firebase/auth";
+const Profile = () => {
+  const auth = getAuth();
+  const storage = getStorage();
   const user = useSelector((state) => state.userSlice.user);
   const [enableEdit, setEnableEdit] = useState(false);
   const [image, setImage] = useState("");
@@ -39,7 +46,25 @@ const User = () => {
     setCropData("");
     setImage("");
   };
-  console.log(cropData);
+
+  const handelUpload = () => {
+    if (cropData) {
+      const storageRef = ref(storage, user?.uid);
+      uploadString(storageRef, cropData, "data_url").then(() => {
+        getDownloadURL(storageRef).then((downloadURL) => {
+          onAuthStateChanged(auth, () => {
+            updateProfile(auth.currentUser, {
+              profile_picture: downloadURL,
+            }).then(() => {
+              setEnableEdit(false);
+              setCropData("");
+              setImage("");
+            });
+          });
+        });
+      });
+    }
+  };
 
   return (
     <div className="w-96 bg-white shadow-lg rounded-lg overflow-hidden my-4 m-auto h-fit">
@@ -48,9 +73,14 @@ const User = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.6)] border p-5 rounded-xl flex justify-center items-center">
           <div className="bg-white p-5 rounded-xl w-1/4">
             <div className="flex justify-between">
-              <button className="py-1 px-2 bg-green-600 rounded-xl text-white">
-                Save
-              </button>
+              {cropData && (
+                <button
+                  onClick={handelUpload}
+                  className="py-1 px-2 bg-green-500 rounded-xl text-white block"
+                >
+                  Save
+                </button>
+              )}
               <button
                 onClick={handelClose}
                 className="py-1 px-2 bg-red-600 rounded-xl text-white"
@@ -58,8 +88,19 @@ const User = () => {
                 <GiCrossMark />
               </button>
             </div>
-            <div>
-              <input type="file" onChange={onChange} />
+            <div className="mt-5">
+              <label
+                htmlFor="profile"
+                className="bg-brand text-white py-2 px-3 rounded-xl inline-block cursor-pointer"
+              >
+                Click to Choose Picture
+                <input
+                  id="profile"
+                  type="file"
+                  className="hidden"
+                  onChange={onChange}
+                />
+              </label>
               {image && (
                 <Cropper
                   ref={cropperRef}
@@ -80,7 +121,7 @@ const User = () => {
               )}
               <button
                 onClick={getCropData}
-                className="py-2 px-4 bg-brand text-white rounded-xl my-2"
+                className="py-2 px-4 bg-brand text-white rounded-xl my-2 block"
               >
                 Crop Image
               </button>
@@ -122,4 +163,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Profile;

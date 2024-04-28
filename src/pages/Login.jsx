@@ -95,11 +95,10 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((res) => {
         GoogleAuthProvider.credentialFromResult(res);
-
         set(ref(db, "user/" + res.user.uid), {
           username: res.user.displayName,
           email: res.user.email,
-          profile_picture: "/profile.png",
+          profile_picture: res.user.photoURL,
         })
           .then(() => {
             toast.success("Login Successful!", {
