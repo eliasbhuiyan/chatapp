@@ -1,7 +1,32 @@
-import React from "react";
-import { IoMdMore } from "react-icons/io";
-const FrndRequestItems = ({ reqList }) => {
-  console.log(reqList);
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+} from "firebase/database";
+import { useSelector } from "react-redux";
+
+const FrndRequestItems = ({ reqList, frReqId }) => {
+  const user = useSelector((state) => state.userSlice.user);
+  const db = getDatabase();
+  const handelConfirm = (data, id) => {
+    set(push(ref(db, "friends/")), {
+      friendId: data.key,
+      friendName: data.username,
+      friendProfile: data.profile_picture,
+      reciverId: user.uid,
+      reciverName: user.displayName,
+      reciverProfile: user.photoURL,
+    });
+
+    remove(ref(db, "friendRequest/" + id));
+  };
+
+  const handelCancel = (id) => {
+    remove(ref(db, "friendRequest/" + id));
+  };
   return (
     <div className="flex gap-4 items-center">
       <div className="w-12 rounded-full overflow-hidden">
@@ -13,10 +38,16 @@ const FrndRequestItems = ({ reqList }) => {
         </h2>
       </div>
       <div className="flex flex-col gap-1 ml-auto">
-        <button className="font-primary text-sm py-1 px-3 bg-brand text-white rounded-lg w-fit">
+        <button
+          onClick={() => handelConfirm(reqList, frReqId)}
+          className="font-primary text-sm py-1 px-3 bg-brand text-white rounded-lg w-fit"
+        >
           Confirm
         </button>
-        <button className="font-primary text-sm py-1 px-4 bg-red-400 text-white rounded-lg w-fit">
+        <button
+          onClick={() => handelCancel(frReqId)}
+          className="font-primary text-sm py-1 px-4 bg-red-400 text-white rounded-lg w-fit"
+        >
           Cancel
         </button>
       </div>

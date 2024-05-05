@@ -42,7 +42,7 @@ const Registration = () => {
           updateProfile(auth.currentUser, {
             displayName: name,
             photoURL: "/profile.png",
-          }).then((res) => {
+          }).then(() => {
             toast.success(
               "Registration Successful!. Please verify your email",
               {

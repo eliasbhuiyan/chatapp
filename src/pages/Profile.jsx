@@ -1,10 +1,11 @@
 import { CiEdit } from "react-icons/ci";
 import { MdEmail } from "react-icons/md";
 import { IoMdMore } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { GiCrossMark } from "react-icons/gi";
+import { getDatabase, ref as dref, set } from "firebase/database";
 import { createRef, useState } from "react";
 import {
   getStorage,
@@ -13,7 +14,10 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { updateProfile, onAuthStateChanged, getAuth } from "firebase/auth";
+import { loggeduser } from "../slice/userSlice";
 const Profile = () => {
+  const disptch = useDispatch();
+  const db = getDatabase();
   const auth = getAuth();
   const storage = getStorage();
   const user = useSelector((state) => state.userSlice.user);
@@ -21,6 +25,7 @@ const Profile = () => {
   const [image, setImage] = useState("");
   const [cropData, setCropData] = useState("");
   const cropperRef = createRef();
+  const [loading, setLoading] = useState(false);
   const onChange = (e) => {
     let files;
     if (e.dataTransfer) {
@@ -48,17 +53,27 @@ const Profile = () => {
   };
 
   const handelUpload = () => {
+    setLoading(true);
     if (cropData) {
       const storageRef = ref(storage, user?.uid);
       uploadString(storageRef, cropData, "data_url").then(() => {
         getDownloadURL(storageRef).then((downloadURL) => {
           onAuthStateChanged(auth, () => {
             updateProfile(auth.currentUser, {
-              profile_picture: downloadURL,
+              photoURL: downloadURL,
             }).then(() => {
+              console.log(auth.currentUser);
+              set(dref(db, "user/" + user.uid), {
+                email: user.email,
+                profile_picture: downloadURL,
+                username: user.displayName,
+              });
+              localStorage.setItem("user", JSON.stringify(auth.currentUser));
+              disptch(loggeduser(auth.currentUser));
               setEnableEdit(false);
               setCropData("");
               setImage("");
+              setLoading(false);
             });
           });
         });
@@ -73,14 +88,23 @@ const Profile = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.6)] border p-5 rounded-xl flex justify-center items-center">
           <div className="bg-white p-5 rounded-xl w-1/4">
             <div className="flex justify-between">
-              {cropData && (
-                <button
-                  onClick={handelUpload}
-                  className="py-1 px-2 bg-green-500 rounded-xl text-white block"
-                >
-                  Save
-                </button>
-              )}
+              {cropData &&
+                (loading ? (
+                  <button className="py-1 w-20 bg-green-500 rounded-xl text-white flex justify-center items-center">
+                    <div className="flex flex-row gap-2">
+                      <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:.7s]"></div>
+                      <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:.3s]"></div>
+                      <div className="w-4 h-4 rounded-full bg-white animate-bounce [animation-delay:.7s]"></div>
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handelUpload}
+                    className="py-1 w-20 bg-green-500 rounded-xl text-white flex justify-center items-center"
+                  >
+                    Save
+                  </button>
+                ))}
               <button
                 onClick={handelClose}
                 className="py-1 px-2 bg-red-600 rounded-xl text-white"
@@ -137,7 +161,7 @@ const Profile = () => {
       />
       <div className="flex items-center justify-between px-6 py-3 bg-gray-900">
         <h1 className="mx-3 text-white font-semibold text-lg">
-          {user.displayName}
+          {user?.displayName}
         </h1>
         <div
           onClick={() => setEnableEdit(true)}

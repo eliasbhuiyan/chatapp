@@ -5,8 +5,9 @@ const UserItems = ({ userData }) => {
   const db = getDatabase();
   const user = useSelector((state) => state.userSlice.user);
   const [friendRequestList, setFriendRequestList] = useState([]);
+  const [realtime, setRealtime] = useState(false);
   const handelRequest = (key, userName) => {
-    console.log(key);
+    setRealtime(!realtime);
     set(push(ref(db, "friendRequest/")), {
       senderName: user.displayName,
       senderId: user.uid,
@@ -20,15 +21,16 @@ const UserItems = ({ userData }) => {
     const starCountRef = ref(db, "friendRequest/");
     onValue(starCountRef, (snapshot) => {
       snapshot.forEach((item) => {
-        if (item.val().senderId == user.uid) {
-          arr.push({ ...item.val(), key: item.key });
-        }
+        arr.push(item.val().senderId + item.val().reciverId);
       });
       setFriendRequestList(arr);
     });
-  }, []);
+  }, [realtime]);
 
-  console.log(friendRequestList);
+  const handelCancel = () => {
+    console.log("click");
+  };
+  // console.log(friendRequestList);
   return (
     <div className="flex gap-4 items-center">
       <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -39,20 +41,23 @@ const UserItems = ({ userData }) => {
           {userData.username}
         </h2>
       </div>
-      {/* {friendRequestList.map((item) => {
-        item.reciverId == userData.key ? (
-          <button className="ml-auto text-brand font-primary text-xl">
-            Cancel
-          </button>
-        ) : ( */}
-      <button
-        onClick={() => handelRequest(userData.key, userData.username)}
-        className="ml-auto text-brand font-primary text-xl"
-      >
-        Add Request
-      </button>
-      {/* );
-      })} */}
+      {friendRequestList.includes(user.uid + userData.key) ? (
+        <button
+          onClick={handelCancel}
+          className="ml-auto text-brand font-primary text-xl"
+        >
+          Cancel Request
+        </button>
+      ) : friendRequestList.includes(userData.key + user.uid) ? (
+        <button className="ml-auto">-</button>
+      ) : (
+        <button
+          onClick={() => handelRequest(userData.key, userData.username)}
+          className="ml-auto text-brand font-primary text-xl"
+        >
+          Add Request
+        </button>
+      )}
     </div>
   );
 };

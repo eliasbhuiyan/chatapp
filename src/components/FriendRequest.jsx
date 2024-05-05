@@ -21,7 +21,6 @@ const FriendRequest = () => {
       setFriendRequestList(arr);
     });
   }, []);
-
   useEffect(() => {
     const starCountRef = ref(db, "user/");
     let arr = [];
@@ -48,7 +47,11 @@ const FriendRequest = () => {
           userList.map(
             (item) =>
               reqId.senderId == item.key && (
-                <FrndRequestItems key={item.key} reqList={item} />
+                <FrndRequestItems
+                  key={item.key}
+                  reqList={item}
+                  frReqId={reqId.key}
+                />
               )
           )
         )}
