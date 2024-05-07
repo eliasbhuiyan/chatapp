@@ -5,6 +5,8 @@ const UserItems = ({ userData }) => {
   const db = getDatabase();
   const user = useSelector((state) => state.userSlice.user);
   const [friendRequestList, setFriendRequestList] = useState([]);
+  const [friendList, setFriendList] = useState([]);
+  const [blockList, setBlockList] = useState([]);
   const [realtime, setRealtime] = useState(false);
   const handelRequest = (key, userName) => {
     setRealtime(!realtime);
@@ -15,7 +17,6 @@ const UserItems = ({ userData }) => {
       reciverId: key,
     });
   };
-
   useEffect(() => {
     let arr = [];
     const starCountRef = ref(db, "friendRequest/");
@@ -26,11 +27,29 @@ const UserItems = ({ userData }) => {
       setFriendRequestList(arr);
     });
   }, [realtime]);
+  
+  useEffect(() => {
+    let arr = [];
+    const starCountRef = ref(db, "friends/");
+    onValue(starCountRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        arr.push(item.val().friendId + item.val().reciverId);
+      });
+      setFriendList(arr);
+    });
+  }, [realtime]);
 
-  const handelCancel = () => {
-    console.log("click");
-  };
-  // console.log(friendRequestList);
+  useEffect(() => {
+    let arr = [];
+    const starCountRef = ref(db, "block/");
+    onValue(starCountRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        arr.push(item.val().blockById + item.val().blockId);
+      });
+      setBlockList(arr);
+    });
+  }, [realtime]);
+
   return (
     <div className="flex gap-4 items-center">
       <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -43,14 +62,29 @@ const UserItems = ({ userData }) => {
       </div>
       {friendRequestList.includes(user.uid + userData.key) ? (
         <button
-          onClick={handelCancel}
           className="ml-auto text-brand font-primary text-xl"
         >
           Cancel Request
         </button>
       ) : friendRequestList.includes(userData.key + user.uid) ? (
         <button className="ml-auto">-</button>
-      ) : (
+      ) : friendList.includes(userData.key + user.uid) || friendList.includes( user.uid + userData.key)
+      ?
+      <button
+          className="ml-auto text-brand font-primary text-xl"
+        >
+          Friends
+        </button>
+      :
+      blockList.includes(userData.key + user.uid) || blockList.includes( user.uid + userData.key)
+      ?
+      <button
+          className="ml-auto text-brand font-primary text-xl"
+        >
+          Blocked
+        </button>
+      :
+      (
         <button
           onClick={() => handelRequest(userData.key, userData.username)}
           className="ml-auto text-brand font-primary text-xl"

@@ -1,6 +1,6 @@
+/* eslint-disable react/prop-types */
 import {
   getDatabase,
-  onValue,
   push,
   ref,
   remove,
@@ -20,7 +20,6 @@ const FrndRequestItems = ({ reqList, frReqId }) => {
       reciverName: user.displayName,
       reciverProfile: user.photoURL,
     });
-
     remove(ref(db, "friendRequest/" + id));
   };
 
