@@ -1,9 +1,22 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import GroupItems from "./GroupItems";
 import Title from "./Title";
+import { getDatabase, onValue, ref } from "firebase/database";
 
 const Group = () => {
+  const db = getDatabase();
+  const [groupList, setGroupList] = useState([]);
+  useEffect(() => {
+    const starCountRef = ref(db, "group/");
+    let arr = [];
+    onValue(starCountRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        arr.push({ ...item.val(), key: item.key });
+      });
+      setGroupList(arr);
+    });
+  }, []);
   return (
     <div className="w-1/3 p-4 rounded-2xl bg-white shadow-lg">
       <Title title="Group" />
@@ -16,10 +29,9 @@ const Group = () => {
         />
       </div>
       <div className="flex flex-col gap-4 mt-5">
-        <GroupItems />
-        <GroupItems />
-        <GroupItems />
-        <GroupItems />
+        {groupList.map((item) => (
+          <GroupItems key={item.key} data={item} />
+        ))}
       </div>
     </div>
   );

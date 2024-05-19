@@ -1,4 +1,3 @@
-import React from "react";
 import { IoMdMore } from "react-icons/io";
 const Title = ({ title }) => {
   return (
