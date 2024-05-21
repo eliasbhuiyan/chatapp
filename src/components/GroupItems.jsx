@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { IoMdMore } from "react-icons/io";
 import { MdOutlineCancel } from "react-icons/md";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 const GroupItems = ({ data, myGroup }) => {
   const db = getDatabase();
   const user = useSelector((state) => state.userSlice.user);
   const [friendList, setFriendList] = useState([]);
+  const [groupmemberList, setGroupMemberList] = useState([]);
   const [show, setShow] = useState(false);
+  const [showAddmember, setShowAddMember] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const handelClick = () => {
     if (myGroup) {
       setShow(true);
@@ -39,27 +42,65 @@ const GroupItems = ({ data, myGroup }) => {
   }, []);
 
   const handelAdd = (data, friend) => {
-    console.log(data);
-    console.log(friend);
-
-    set(ref(db, "group/" + data.key), {
+    set(push(ref(db, "groupmembers")), {
       groupName: data.groupName,
+      groupId: data.key,
       createBy: data.createBy,
       createByID: data.createByID,
-      member: "asdfj",
+      memberName: friend.friendName,
+      memberId: friend.key,
+      memberProfile: friend.friendImg,
     });
   };
-  // {
-  //   friendName: friend.friendName,
-  //   friendID: friend.friendID,
-  //   friendImg: friend.friendImg,
-  // },
+
+  useEffect(() => {
+    let arr = [];
+    const starCountRef = ref(db, "groupmembers/");
+    onValue(starCountRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        if (data.key == item.val().groupId) {
+          arr.push({ ...item.val(), key: item.key });
+        }
+      });
+      setGroupMemberList(arr);
+    });
+  }, []);
+  console.log(groupmemberList);
   return (
     <div>
       {show && (
         <div className="w-full h-full absolute top-0 left-0 bg-[rgba(0,0,0,0.5)] rounded-2xl flex justify-center items-center">
           <div className="bg-white text-primary px-6 py-4 rounded-xl">
             <button className="text-xl" onClick={() => setShow(false)}>
+              <MdOutlineCancel />
+            </button>
+            <br />
+            <button
+              onClick={() => {
+                setShowInfo(true);
+                setShow(false);
+              }}
+              className="title border-b pb-2 mb-2"
+            >
+              Group Info
+            </button>
+            <br />
+            <button
+              onClick={() => {
+                setShowAddMember(true);
+                setShow(false);
+              }}
+              className="title border-b pb-2 mb-2"
+            >
+              Add Friends
+            </button>
+          </div>
+        </div>
+      )}
+      {showAddmember && (
+        <div className="w-full h-full absolute top-0 left-0 bg-[rgba(0,0,0,0.5)] rounded-2xl flex justify-center items-center">
+          <div className="bg-white text-primary px-6 py-4 rounded-xl">
+            <button className="text-xl" onClick={() => setShowAddMember(false)}>
               <MdOutlineCancel />
             </button>
             <p className="title border-b pb-2 mb-2">Add Friends</p>
@@ -84,6 +125,39 @@ const GroupItems = ({ data, myGroup }) => {
               ))
             ) : (
               <p className="text-center">No Friend Available</p>
+            )}
+          </div>
+        </div>
+      )}
+      {showInfo && (
+        <div className="w-full h-full absolute top-0 left-0 bg-[rgba(0,0,0,0.5)] rounded-2xl flex justify-center items-center">
+          <div className="bg-white text-primary px-6 py-4 rounded-xl">
+            <button className="text-xl" onClick={() => setShowInfo(false)}>
+              <MdOutlineCancel />
+            </button>
+            <p className="title border-b pb-2 mb-2">{data?.groupName}</p>
+            {groupmemberList.length > 0 ? (
+              groupmemberList.map((item) => (
+                <div key={item.key} className="flex gap-4 items-center">
+                  <div className="w-12 h-12 rounded-full overflow-hidden">
+                    <img
+                      src={item?.memberProfile}
+                      className="w-full"
+                      alt="alt"
+                    />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-primary text-primary font-bold">
+                      {item?.memberName}
+                    </h2>
+                  </div>
+                  <button className="py-2 px-4 bg-brand text-white rounded-xl">
+                    Remove
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="text-center">No Member Available</p>
             )}
           </div>
         </div>

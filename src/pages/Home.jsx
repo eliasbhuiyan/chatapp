@@ -7,13 +7,13 @@ import Users from "../components/Users";
 
 const Home = () => {
   return (
-    <div className="bg-slate-100 w-full py-12 px-6">
-      <div className="flex gap-6 ">
+    <div className="bg-slate-100 w-full py-12 px-6 h-screen">
+      <div className="flex gap-6 h-1/2">
         <MyGroup />
         <Group />
         <Friends />
       </div>
-      <div className="flex gap-6 mt-8">
+      <div className="flex gap-6 mt-8 h-1/2">
         <Users />
         <FriendRequest />
         <BlockList />

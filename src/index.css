@@ -82,21 +82,13 @@
   }
   /* ================== Chat Box Css ==================== */
   .chatbox {
-    @apply h-80 bg-[#343541] flex flex-col rounded-lg;
+    @apply bg-[#343541] flex flex-col rounded-lg h-[calc(100%-100px)];
   }
 
   .sender-area {
     @apply bg-[#343541] w-full h-[70px] flex rounded-lg;
   }
-  .message {
-    @apply w-full h-10;
-  }
-  .message:nth-child(even) {
-    @apply bg-[#2E2F3A];
-  }
-  .message:nth-child(odd) {
-    @apply bg-[#343541];
-  }
+
   .send-img {
     @apply w-[30px];
   }

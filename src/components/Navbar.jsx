@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { IoChatbox } from "react-icons/io5";
 import { useSelector } from "react-redux";
 const Navbar = () => {
   const user = useSelector((state) => state.userSlice.user);
+  const location = useLocation().pathname;
   return (
     <nav className="w-64 bg-white h-screen pl-6 pt-6 shadow-[6px_0px_10px_-7px_rgba(0,0,0,0.62)]">
       <div>
@@ -14,7 +15,9 @@ const Navbar = () => {
           <li>
             <Link
               to="/"
-              className="flex items-center gap-3 py-3 px-3 bg-brand text-white rounded-lg w-fit"
+              className={`${
+                location == "/" && "bg-brand text-white"
+              } flex items-center gap-3 py-3 px-3  rounded-lg w-fit`}
             >
               <FaHome />
               <span>Home</span>
@@ -23,7 +26,9 @@ const Navbar = () => {
           <li>
             <Link
               to="/chat"
-              className="flex items-center gap-3 py-3 px-3 rounded-lg  w-fit"
+              className={`${
+                location == "/chat" && "bg-brand text-white"
+              } flex items-center gap-3 py-3 px-3 rounded-lg  w-fit`}
             >
               <IoChatbox />
               <span>Chat</span>
