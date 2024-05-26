@@ -14,8 +14,8 @@ const BlockList = () => {
     const starCountRef = ref(db, "block/");
     onValue(starCountRef, (snapshot) => {
       snapshot.forEach((item) => {
-        if(item.val().blockById == user.uid){
-          arr.push({...item.val(), key: item.key});
+        if (item.val().blockById == user.uid) {
+          arr.push({ ...item.val(), key: item.key });
         }
       });
       setBlockList(arr);
@@ -34,14 +34,11 @@ const BlockList = () => {
         />
       </div>
       <div className="flex flex-col gap-4 mt-5">
-        {
-          blockList.length > 0
-          ?
-          blockList.map((item)=>(
-            <BlockItems key={item.key} data={item}/>
-          ))
-          : <p className="text-center">No block list Available</p>
-        }
+        {blockList.length > 0 ? (
+          blockList.map((item) => <BlockItems key={item.key} data={item} />)
+        ) : (
+          <p className="text-center">No block list Available</p>
+        )}
       </div>
     </div>
   );

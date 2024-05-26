@@ -1,12 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { IoChatbox } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loggeduser } from "../slice/userSlice";
 const Navbar = () => {
   const user = useSelector((state) => state.userSlice.user);
   const location = useLocation().pathname;
+  const disptch = useDispatch();
+  const handelLogout = () => {
+    localStorage.removeItem("user");
+    disptch(loggeduser(null));
+    window.location.reload();
+  };
   return (
-    <nav className="w-64 bg-white h-screen pl-6 pt-6 shadow-[6px_0px_10px_-7px_rgba(0,0,0,0.62)]">
+    <nav className="w-64 bg-white h-screen pl-6 py-6 shadow-[6px_0px_10px_-7px_rgba(0,0,0,0.62)] flex flex-col justify-between">
       <div>
         <img src="/logo.png" alt="logo" />
       </div>
@@ -43,27 +50,31 @@ const Navbar = () => {
               <span>Group</span>
             </Link>
           </li>
-          <li>
-            <Link
-              to="/profile"
-              className="flex items-center gap-3 py-3 px-3 rounded-lg  w-fit"
-            >
-              <img
-                src={user?.photoURL}
-                alt="user"
-                className="w-12 h-12 rounded-full"
-              />
-              <div>
-                <p className="text-brand font-semibold text-xl">
-                  {user?.displayName}
-                </p>
-                <p className="text-secondary font-medium text-lg">
-                  Edit Profile
-                </p>
-              </div>
-            </Link>
-          </li>
         </ul>
+      </div>
+      <div>
+        <Link
+          to="/profile"
+          className="flex items-center gap-3 py-3 px-3 rounded-lg  w-fit"
+        >
+          <img
+            src={user?.photoURL}
+            alt="user"
+            className="w-12 h-12 rounded-full"
+          />
+          <div>
+            <p className="text-brand font-semibold text-xl">
+              {user?.displayName}
+            </p>
+            <p className="text-secondary font-medium text-lg">Edit Profile</p>
+          </div>
+        </Link>
+        <button
+          onClick={handelLogout}
+          className="py-3 px-3 rounded-lg  w-fit bg-brand text-white"
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );

@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 export const friendInfoSlice = createSlice({
   name: "chatfriendinfo",
   initialState: {
-    friendInfo: null,
+    friendInfo: JSON.parse(localStorage.getItem("currentFriendInfo"))
+      ? JSON.parse(localStorage.getItem("currentFriendInfo"))
+      : null,
   },
   reducers: {
     currentFriendInfo: (state, action) => {

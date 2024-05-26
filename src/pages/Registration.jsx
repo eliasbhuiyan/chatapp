@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getAuth,
@@ -10,8 +10,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import { RiEyeCloseFill } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 const Registration = () => {
+  const user = useSelector((state) => state.userSlice.user);
   const auth = getAuth();
   const navigate = useNavigate();
   let [name, setName] = useState("");
@@ -79,7 +81,11 @@ const Registration = () => {
         });
     }
   };
-
+  useEffect(() => {
+    if (user) {
+      return navigate("/");
+    }
+  }, []);
   return (
     <section className="pt-10">
       <div className="container">

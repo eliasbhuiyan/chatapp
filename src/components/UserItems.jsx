@@ -27,7 +27,7 @@ const UserItems = ({ userData }) => {
       setFriendRequestList(arr);
     });
   }, [realtime]);
-  
+
   useEffect(() => {
     let arr = [];
     const starCountRef = ref(db, "friends/");
@@ -60,31 +60,23 @@ const UserItems = ({ userData }) => {
           {userData.username}
         </h2>
       </div>
-      {friendRequestList.includes(user.uid + userData.key) ? (
-        <button
-          className="ml-auto text-brand font-primary text-xl"
-        >
+      {friendRequestList.includes(user?.uid + userData.key) ? (
+        <button className="ml-auto text-brand font-primary text-xl">
           Cancel Request
         </button>
-      ) : friendRequestList.includes(userData.key + user.uid) ? (
+      ) : friendRequestList.includes(userData.key + user?.uid) ? (
         <button className="ml-auto">-</button>
-      ) : friendList.includes(userData.key + user.uid) || friendList.includes( user.uid + userData.key)
-      ?
-      <button
-          className="ml-auto text-brand font-primary text-xl"
-        >
+      ) : friendList.includes(userData.key + user?.uid) ||
+        friendList.includes(user?.uid + userData.key) ? (
+        <button className="ml-auto text-brand font-primary text-xl">
           Friends
         </button>
-      :
-      blockList.includes(userData.key + user.uid) || blockList.includes( user.uid + userData.key)
-      ?
-      <button
-          className="ml-auto text-brand font-primary text-xl"
-        >
+      ) : blockList.includes(userData.key + user?.uid) ||
+        blockList.includes(user?.uid + userData.key) ? (
+        <button className="ml-auto text-brand font-primary text-xl">
           Blocked
         </button>
-      :
-      (
+      ) : (
         <button
           onClick={() => handelRequest(userData.key, userData.username)}
           className="ml-auto text-brand font-primary text-xl"
