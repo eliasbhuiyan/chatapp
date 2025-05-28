@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #222222;
+  --color-secondary: #7a7a7a;
+  --color-brand: #11175d;
+}
+
+.chatinputbox {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.chat_head{
+  height: 80px;
+}
+
+.chat_body{
+  height: calc(100% - 110px);
+}
+.chat_body::-webkit-scrollbar{
+  display: none;
+}
