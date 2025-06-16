@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,8 +8,11 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Registration = () => {
+  const userInfo = useSelector((state) => state.userData.user);
+
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
     fullName: "",
@@ -55,6 +58,9 @@ const Registration = () => {
         }
       });
   };
+  if (userInfo) {
+    return <Navigate to="/" />;
+  }
   return (
     <div className="h-screen flex items-center justify-center">
       <ToastContainer position="top-right" theme="light" />

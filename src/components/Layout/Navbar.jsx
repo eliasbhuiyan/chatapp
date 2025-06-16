@@ -1,9 +1,16 @@
 import React from "react";
 import { FaMessage } from "react-icons/fa6";
 import { MdGroup } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
+import { loggedUser } from "../../store/slices/authSlice";
 
 const Navbar = () => {
+  const userData = useSelector((state) => state.userData.user);
+  const dispatch = useDispatch();
+  const handelSignout = () => {
+    dispatch(loggedUser(null));
+  };
   return (
     <nav className="h-screen py-8 px-4 shadow-xl flex flex-col w-xs">
       <h2 className="font-bold text-3xl text-brand">ChatApp</h2>
@@ -21,15 +28,25 @@ const Navbar = () => {
           <MdGroup /> Group
         </Link>
       </div>
-      <Link to="/profile" className="flex items-center gap-4 mt-auto">
-        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-brand">
-          <img className="w-full" src="/profile.png" alt="profile" />
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-brand">User Name</h2>
-          <p className="text-base font-normal text-secondary">Edit Profile</p>
-        </div>
-      </Link>
+      <div className="mt-auto flex flex-col gap-6">
+        <Link to="/profile" className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-brand">
+            <img className="w-full" src={userData?.photoURL} alt="profile" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-brand">
+              {userData?.displayName}
+            </h2>
+            <p className="text-base font-normal text-secondary">Edit Profile</p>
+          </div>
+        </Link>
+        <button
+          onClick={handelSignout}
+          className="py-2 bg-red-500 text-white rounded-xl cursor-pointer"
+        >
+          Sign out
+        </button>
+      </div>
     </nav>
   );
 };

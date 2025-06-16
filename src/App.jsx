@@ -5,6 +5,7 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import Group from "./pages/Group";
 import ErrorPage from "./pages/ErrorPage";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/group" element={<Group />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
         <Route path="*" element={<ErrorPage/>}/>
       </Routes>
