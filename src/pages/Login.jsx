@@ -23,11 +23,11 @@ const Login = () => {
         if (!res.user.emailVerified) {
           toast.error("Please verify your email before sign in!");
         } else {
-          dispatch(loggedUser(res.user));
           toast.success("Signed in successfully");
           setTimeout(() => {
             navigate("/");
-          }, 2000);
+            dispatch(loggedUser(res.user));
+          }, 1000);
         }
       })
       .catch((error) => {
