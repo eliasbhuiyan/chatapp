@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 const ChatList = () => {
   const [modal, setModal] = useState(false);
   const [userList, setUserList] = useState([]);
+  const [friendList, setFriendList] = useState([]);
+
   const db = getDatabase();
   const userInfo = useSelector((state) => state.userData.user);
 
@@ -22,7 +24,15 @@ const ChatList = () => {
       setUserList(arr);
     });
   }, []);
-
+  useEffect(() => {
+    let arr = [];
+    onValue(ref(db, "friendList"), (snapshot) => {
+      snapshot.forEach((item) => {
+        arr.push({ ...item.val(), id: item.key });
+      });
+      setFriendList(arr);
+    });
+  }, []);
   return (
     <div className="p-4 shadow-xl h-screen overflow-hidden w-2xl">
       <div className="flex items-center justify-between">
@@ -39,18 +49,34 @@ const ChatList = () => {
         <input className="outline-0" type="text" placeholder="Search" />
       </div>
       <div className="mt-10 h-8/10 overflow-y-auto">
-        <ChatITems />
-        <ChatITems />
-        <ChatITems />
-        <ChatITems />
-        <ChatITems />
-        <ChatITems />
-        <ChatITems />
+        {friendList.map((item) =>
+          item.creatorID == userInfo.uid ? (
+            <ChatITems
+              key={item.id}
+              name={item.participentName}
+              avatar={item.participentAvatar}
+              id={item.participentID}
+            />
+          ) : (
+            <ChatITems
+              key={item.id}
+              name={item.creatorName}
+              avatar={item.creatorAvatar}
+              id={item.creatorID}
+            />
+          )
+        )}
       </div>
 
       {modal && (
         <div className="fixed top-0 left-0 flex items-center justify-center h-screen w-full z-10 bg-[#0000003e]">
           <div className="bg-white p-5 rounded-xl">
+            <button
+              onClick={() => setModal(false)}
+              className="text-xl font-bold"
+            >
+              X
+            </button>
             <div className="mt-5 flex items-center gap-2 p-1 rounded-xl border border-secondary">
               <FaSearch />
               <input className="outline-0" type="text" placeholder="Search" />
