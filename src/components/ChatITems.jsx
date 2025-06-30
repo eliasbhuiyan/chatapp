@@ -1,9 +1,19 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectConversation } from "../store/slices/convarsationSlice";
 
 const ChatITems = ({ name, avatar, id }) => {
+  const activeFriend = useSelector((state) => state.activeFriend.friend);
+  const dispatch = useDispatch();
+  const handelClick = () => {
+    if (activeFriend?.id !== id)
+      dispatch(selectConversation({ name, avatar, id }));
+  };
   return (
-    <div className="flex items-center gap-4 my-4 cursor-pointer">
+    <div
+      onClick={handelClick}
+      className="flex items-center gap-4 my-4 cursor-pointer"
+    >
       <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-brand">
         <img className="w-full" src={avatar} alt="profile" />
       </div>

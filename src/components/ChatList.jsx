@@ -28,11 +28,17 @@ const ChatList = () => {
     let arr = [];
     onValue(ref(db, "friendList"), (snapshot) => {
       snapshot.forEach((item) => {
-        arr.push({ ...item.val(), id: item.key });
+        if (
+          item.val().creatorID === userInfo.uid ||
+          item.val().participentID === userInfo.uid
+        ) {
+          arr.push({ ...item.val(), id: item.key });
+        }
       });
       setFriendList(arr);
     });
   }, []);
+
   return (
     <div className="p-4 shadow-xl h-screen overflow-hidden w-2xl">
       <div className="flex items-center justify-between">
