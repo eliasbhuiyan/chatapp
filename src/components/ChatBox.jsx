@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { FaFaceSmile } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  set,
+  update,
+} from "firebase/database";
 import EmojiPicker from "emoji-picker-react";
 
 const ChatBox = () => {
+  const chatboxRef = useRef(null);
   const [emoji, setEmoji] = useState(false);
   const [chatContent, setChatContent] = useState("");
   const [messages, setMessages] = useState([]);
@@ -17,6 +25,10 @@ const ChatBox = () => {
       senderID: userInfo.uid,
       reciverID: activeFriend.id,
       message: chatContent,
+    });
+
+    update(ref(db, "friendList/" + activeFriend.conVoID), {
+      lastMessage: chatContent,
     });
     setChatContent("");
     setEmoji(false);
@@ -37,6 +49,12 @@ const ChatBox = () => {
       setMessages(arr);
     });
   }, [activeFriend]);
+
+  useEffect(() => {
+    if (chatboxRef.current) {
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+    }
+  }, [messages]);
   return (
     <div className="w-full bg-slate-50 h-screen">
       <div className="w-full chat_head p-5 bg-white flex items-center justify-center gap-4">
@@ -47,7 +65,10 @@ const ChatBox = () => {
           {activeFriend.name}
         </h2>
       </div>
-      <div className="w-full px-6 relative chat_body overflow-y-auto">
+      <div
+        ref={chatboxRef}
+        className="w-full px-6 relative chat_body overflow-y-auto"
+      >
         {/* Messages Body part */}
         <div className="flex flex-col gap-5 pb-10">
           {messages.map((item) =>
@@ -69,36 +90,36 @@ const ChatBox = () => {
           )}
         </div>
         {/* Message Input box */}
-        <div className="absolute bottom-0 left-0 w-full bg-slate-50 px-5 ">
-          <div className="bg-white rounded-xl p-4 flex gap-4 chatinputbox">
-            <input
-              className="w-full outline-0"
-              type="text"
-              placeholder="Text Here"
-              onChange={(e) => setChatContent(e.target.value)}
-              value={chatContent}
-            />
-            <button
-              onClick={() => setEmoji(!emoji)}
-              className="text-xl text-brand cursor-pointer"
-            >
-              <FaFaceSmile />
-            </button>
-            <button
-              onClick={handelSendMessage}
-              disabled={!chatContent}
-              className="text-xl text-brand cursor-pointer"
-            >
-              <IoSend />
-            </button>
-          </div>
-          {emoji && (
-            <EmojiPicker
-              emojiStyle="facebook"
-              onEmojiClick={(i) => setChatContent((prev) => prev + i.emoji)}
-            />
-          )}
+      </div>
+      <div className=" w-full bg-slate-50 px-5 ">
+        <div className="bg-white rounded-xl p-4 flex gap-4 chatinputbox">
+          <input
+            className="w-full outline-0"
+            type="text"
+            placeholder="Text Here"
+            onChange={(e) => setChatContent(e.target.value)}
+            value={chatContent}
+          />
+          <button
+            onClick={() => setEmoji(!emoji)}
+            className="text-xl text-brand cursor-pointer"
+          >
+            <FaFaceSmile />
+          </button>
+          <button
+            onClick={handelSendMessage}
+            disabled={!chatContent}
+            className="text-xl text-brand cursor-pointer"
+          >
+            <IoSend />
+          </button>
         </div>
+        {emoji && (
+          <EmojiPicker
+            emojiStyle="facebook"
+            onEmojiClick={(i) => setChatContent((prev) => prev + i.emoji)}
+          />
+        )}
       </div>
     </div>
   );

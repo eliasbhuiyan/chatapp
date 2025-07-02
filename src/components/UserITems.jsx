@@ -14,6 +14,7 @@ const UserItems = ({ data }) => {
       participentName: data.username,
       participentID: data.id,
       participentAvatar: data.profile_picture,
+      lastMessage: "",
     });
   };
 

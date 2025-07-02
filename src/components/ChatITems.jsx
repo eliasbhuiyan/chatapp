@@ -2,12 +2,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectConversation } from "../store/slices/convarsationSlice";
 
-const ChatITems = ({ name, avatar, id }) => {
+const ChatITems = ({ name, avatar, id, conVoID, lastMessage }) => {
   const activeFriend = useSelector((state) => state.activeFriend.friend);
   const dispatch = useDispatch();
   const handelClick = () => {
     if (activeFriend?.id !== id)
-      dispatch(selectConversation({ name, avatar, id }));
+      dispatch(selectConversation({ name, avatar, id, conVoID }));
   };
   return (
     <div
@@ -19,7 +19,11 @@ const ChatITems = ({ name, avatar, id }) => {
       </div>
       <div className="">
         <h2 className="text-lg font-semibold text-brand">{name}</h2>
-        <p className="text-base font-normal text-secondary">Hello</p>
+        <p className="text-base font-normal text-secondary">
+          {lastMessage && lastMessage.length > 12
+            ? lastMessage.substring(0, 10) + "..."
+            : lastMessage}
+        </p>
       </div>
       <p className="text-base font-normal text-secondary mb-auto ml-auto">
         10:30 PM

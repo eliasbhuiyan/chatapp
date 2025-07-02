@@ -25,8 +25,8 @@ const ChatList = () => {
     });
   }, []);
   useEffect(() => {
-    let arr = [];
     onValue(ref(db, "friendList"), (snapshot) => {
+      let arr = [];
       snapshot.forEach((item) => {
         if (
           item.val().creatorID === userInfo.uid ||
@@ -59,16 +59,20 @@ const ChatList = () => {
           item.creatorID == userInfo.uid ? (
             <ChatITems
               key={item.id}
+              conVoID={item.id}
               name={item.participentName}
               avatar={item.participentAvatar}
               id={item.participentID}
+              lastMessage={item.lastMessage}
             />
           ) : (
             <ChatITems
               key={item.id}
+              conVoID={item.id}
               name={item.creatorName}
               avatar={item.creatorAvatar}
               id={item.creatorID}
+              lastMessage={item.lastMessage}
             />
           )
         )}
