@@ -1,20 +1,24 @@
 import React from "react";
 import { IoSend } from "react-icons/io5";
 import { FaFaceSmile } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const GroupChatBox = () => {
+  const activeGroup = useSelector((state) => state.activeFriend.group);
+  console.log(activeGroup);
+
   return (
     <div className="w-full bg-slate-50 h-screen">
       {/* Chat Header */}
       <div className="w-full chat_head p-5 bg-white flex items-center justify-center gap-4">
-        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-brand">
-          <img
-            className="w-full"
-            src="https://via.placeholder.com/40"
-            alt="profile"
-          />
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-brand flex items-center justify-center">
+          <p className="text-lg font-bold text-white">
+            {activeGroup.groupName[0]}
+          </p>
         </div>
-        <h2 className="text-lg font-semibold text-brand">Friend Name</h2>
+        <h2 className="text-lg font-semibold text-brand">
+          {activeGroup.groupName}
+        </h2>
       </div>
 
       {/* Chat Messages */}
