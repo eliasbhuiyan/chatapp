@@ -2,7 +2,7 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import ChatITems from "./ChatITems";
-import UserItems from "./userITems";
+import UserItems from "./UserItems";
 import { useSelector } from "react-redux";
 
 const ChatList = () => {
