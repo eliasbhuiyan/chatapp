@@ -2,8 +2,8 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import ChatITems from "./ChatITems";
-import UserItems from "./UserItems";
 import { useSelector } from "react-redux";
+import UserItems from "./UserItems";
 
 const ChatList = () => {
   const [modal, setModal] = useState(false);
