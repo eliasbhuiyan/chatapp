@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import ChatITems from "./ChatITems";
 import { useSelector } from "react-redux";
-import UserItems from "./UserItems";
+import UserItem from "./UserItem";
 
 const ChatList = () => {
   const [modal, setModal] = useState(false);
@@ -93,7 +93,7 @@ const ChatList = () => {
             </div>
             <div className="h-96 w-sm overflow-y-auto">
               {userList.map((item) => (
-                <UserItems key={item.id} data={item} />
+                <UserItem key={item.id} data={item} />
               ))}
             </div>
           </div>

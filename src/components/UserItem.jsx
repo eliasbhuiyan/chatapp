@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 
-const UserItems = ({ data }) => {
+const UserItem = ({ data }) => {
   const userInfo = useSelector((state) => state.userData.user);
   const [friendList, setFriendList] = useState([]);
   const db = getDatabase();
@@ -51,4 +51,4 @@ const UserItems = ({ data }) => {
   );
 };
 
-export default UserItems;
+export default UserItem;
